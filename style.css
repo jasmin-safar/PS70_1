@@ -37,15 +37,15 @@ nav {
 .nav-title{
   margin-left: 15px;
   margin-right: 15px;
-  color: #000000;
+  color: #85a86c;
 }
 
 .nav-link {
-  border: 3px outset #a3a3a3;
+  border: 3px outset #aac294;
   border-radius: 20px;
   padding: 10px 30px;
-  background-color: #a3a3a3;
-  color: #EEE7E8;
+  background-color: #aac294;
+  color: #99334d !important;
   transition: 0.3s;
 }
 
@@ -53,7 +53,7 @@ nav {
   border: 3px outset #FFFFFF;
   border-radius: 20px;
   padding: 10px 30px;
-  background-color: #a3a3a3;
+  background-color: #aac294;
   transition: 0.3s;
 }
 
@@ -61,7 +61,7 @@ nav {
   border: 3px outset #FFFFFF;
   border-radius: 40px;
   padding: 10px 30px;
-  background-color: #a3a3a3;
+  background-color: #aac294;
   color: #000000;
   transition: 0.3s;
 }
@@ -70,7 +70,7 @@ nav {
   border: 3px inset #FFFFFF;
   border-radius: 40px;
   padding: 10px 30px;
-  background-color: #a3a3a3;
+  background-color: #aac294;
   transition: 0.3s;
 }
 
