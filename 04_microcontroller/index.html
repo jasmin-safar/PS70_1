@@ -25,11 +25,125 @@
 
 <h3>Week 4: Microcontroller Programming</h3>
 
-<h4>[Do Something with an arduino]</h4>
+
+<div style="text-align: left;">
+  <video controls style="width: 320px;">
+    <source src="mvp_demo_copy.mp4" type="video/mp4">
+  </video>
+</div>
+
+<h4>Arduino Code</h4>
 
 
+<p>For the microcontroller programming assingment I decided to make progress toward my final project and move from the rack and pinion design of a blooming flower to 3D printed gears and more controlled movement through the programmed microcontroller. Particularly after the kinetic sculpture I realized that I needed delays between the blooming and closing effect. In addition, the kinetic sculpture moved very fast, whereas I had envisioned a slow opening and closing effect for my final project. 
 
+I included the following code for my microcontroller programming, which controls the petal movement. Specifically, in this code, I tried to create a system that allows a servo motor to slowly open and close a flower mechanism when a button is pressed. I used a class structure to organize the code more clearly by combining the button input and servo output into one controller. That way the button serves as a switch to change the state of the flower between open and closed. When the button is pressed, the servo does not immediately jump to the new position. Instead, I decided to make it move very slowly and smoothly by increasing or decreasing the angle step by step. I implemented this gradual movement using timers with the millis() function instead of using delay(), so the program can continuously run. I also added a debounce system to prevent the button from accidentally registering multiple presses at once. Overall, the goal of this code was to create a more natural and controlled blooming movement for the kinetic flower sculpture.</p>
 
+<pre style="background: transparent; color: black; font-size:14px; line-height:1.4; border:none; padding:0; margin:0;">
+<code style="background: transparent; color: black;">
+#include &lt;ESP32Servo.h&gt;
+
+// Declare a class to control both the button (input) and servo (output)
+class ButtonServoController {
+
+  private:
+    int servoPin;
+    int buttonPin;
+    Servo myServo;
+    int closedPos;
+    int openPos;
+    bool isOpen;
+    int lastButtonState;
+    int currentPos;
+    int targetPos;
+    unsigned long lastMoveTime;
+    unsigned long lastDebounceTime;
+
+  public:
+
+    ButtonServoController(int sPin, int bPin, int cPos, int oPos)
+      : servoPin(sPin),
+        buttonPin(bPin),
+        closedPos(cPos),
+        openPos(oPos),
+        isOpen(false),
+        lastButtonState(HIGH),
+        currentPos(cPos),
+        targetPos(cPos),
+        lastMoveTime(0),
+        lastDebounceTime(0) {}
+
+    void begin() {
+      pinMode(buttonPin, INPUT_PULLUP);
+      myServo.attach(servoPin);
+      myServo.write(closedPos);
+    }
+
+    void update() {
+      handleButton();
+      moveServoVerySlow();
+    }
+
+  private:
+
+    void handleButton() {
+      int currentButtonState = digitalRead(buttonPin);
+
+      if (lastButtonState == HIGH &amp;&amp; currentButtonState == LOW) {
+
+        if (millis() - lastDebounceTime &gt; 250) {
+
+          isOpen = !isOpen;
+
+          if (isOpen) {
+            targetPos = openPos;
+          } else {
+            targetPos = closedPos;
+          }
+
+          lastDebounceTime = millis();
+        }
+      }
+
+      lastButtonState = currentButtonState;
+    }
+
+    void moveServoVerySlow() {
+
+      if (millis() - lastMoveTime &gt; 40) {
+
+        lastMoveTime = millis();
+
+        if (currentPos &lt; targetPos) {
+          currentPos++;
+          myServo.write(currentPos);
+        }
+        else if (currentPos &gt; targetPos) {
+          currentPos--;
+          myServo.write(currentPos);
+        }
+      }
+    }
+};
+
+int servoPin = D0;
+int buttonPin = D1;
+
+ButtonServoController controller(servoPin, buttonPin, 0, 55);
+
+void setup() {
+  controller.begin();
+}
+
+void loop() {
+  controller.update();
+}
+</code>
+</pre>
+
+<div style="text-align: left;">
+  <img src="full_flower_circuit_copy.jpeg" style="width: 320px;">
+</div>
 
 </div>
 </xmp>
